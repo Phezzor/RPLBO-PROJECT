@@ -20,6 +20,7 @@ class Pengguna extends Authenticatable implements JWTSubject
         'password',
         'nama_lengkap',
         'role',
+        'status',
     ];
 
     // === AUTO GENERATE ID ===

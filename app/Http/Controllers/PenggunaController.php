@@ -22,10 +22,12 @@ class PenggunaController extends Controller
             'password' => 'required|min:6',
             'nama_lengkap' => 'required',
             'role' => 'required',
+            'status' => 'in:active,inactive'
         ]);
 
         $data = $request->all();
         $data['password'] = Hash::make($request->password);
+        $data['status'] = $request->status ?? 'active';
 
         $pengguna = Pengguna::create($data);
 
@@ -61,6 +63,10 @@ class PenggunaController extends Controller
 
         $pengguna = Pengguna::findOrFail($id);
 
+        $request->validate([
+            'status' => 'in:active,inactive'
+        ]);
+
         if ($request->password) {
             $request['password'] = Hash::make($request->password);
         }
@@ -85,5 +91,26 @@ class PenggunaController extends Controller
         Pengguna::destroy($id);
 
         return response()->json(['message' => 'Pengguna dihapus']);
+    }
+
+    // === UBAH STATUS SAJA (ACTIVE / INACTIVE) ===
+    public function updateStatus(Request $request, $id)
+    {
+        if ($request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Akses ditolak.'], 403);
+        }
+
+        $request->validate([
+            'status' => 'required|in:active,inactive'
+        ]);
+
+        $pengguna = Pengguna::findOrFail($id);
+        $pengguna->status = $request->status;
+        $pengguna->save();
+
+        return response()->json([
+            'message' => 'Status pengguna diperbarui',
+            'data' => $pengguna
+        ]);
     }
 }

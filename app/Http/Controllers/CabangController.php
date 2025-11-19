@@ -22,15 +22,14 @@ class CabangController extends Controller
         $request->validate([
             'nama_cabang' => 'required|string|max:100',
             'alamat' => 'required|string',
-            'status' => 'required|string',
+            'status' => 'nullable|string'
         ]);
 
-        $cabang = Cabang::create([
-            'nama_cabang' => $request->nama_cabang,
-            'alamat' => $request->alamat,
-            'status' => $request->status,
-            'created_at' => now(),
-        ]);
+        $cabang = Cabang::create($request->only([
+            'nama_cabang',
+            'alamat',
+            'status'
+        ]));
 
         return response()->json([
             'message' => 'Cabang berhasil ditambahkan',
@@ -63,12 +62,16 @@ class CabangController extends Controller
         }
 
         $request->validate([
-            'nama_cabang' => 'string|max:100',
-            'alamat' => 'string',
-            'status' => 'string',
+            'nama_cabang' => 'nullable|string|max:100',
+            'alamat' => 'nullable|string',
+            'status' => 'nullable|string'
         ]);
 
-        $cabang->update($request->all());
+        $cabang->update($request->only([
+            'nama_cabang',
+            'alamat',
+            'status'
+        ]));
 
         return response()->json([
             'message' => 'Cabang berhasil diperbarui',

@@ -32,43 +32,54 @@ class AuthController extends Controller
 }
 
     // LOGIN
-    public function login(Request $request)
-    {
-        $request->validate([
-            'username' => 'required',
-            'password' => 'required',
-        ]);
+            public function login(Request $request)
+        {
+            $request->validate([
+                'username' => 'required',
+                'password' => 'required',
+            ]);
 
-        $credentials = $request->only('username', 'password');
+            $credentials = $request->only('username', 'password');
 
-        if (!$token = auth()->attempt($credentials)) {
+            if (!$token = auth()->attempt($credentials)) {
+                return response()->json([
+                    'message' => 'Username atau password salah'
+                ], 401);
+            }
+
+            $pengguna = auth()->user();
+
+            // CEK STATUS ACTIVE / INACTIVE
+            if ($pengguna->status === 'inactive') {
+
+                // Hapus token yang baru dibuat
+                auth()->logout();
+
+                return response()->json([
+                    'message' => 'Akun anda tidak aktif'
+                ], 403);
+            }
+
+            // Durasi token 1 hari
+            $cookie = cookie(
+                'jwt_token',
+                $token,
+                60 * 24,  // menit
+                '/',
+                null,
+                false,
+                true
+            );
+
             return response()->json([
-                'message' => 'Username atau password salah'
-            ], 401);
+                'message' => 'Login berhasil',
+                'data' => [
+                    'id' => $pengguna->id,
+                    'nama_lengkap' => $pengguna->nama_lengkap,
+                    'role' => $pengguna->role,
+                ]
+            ])->withCookie($cookie);
         }
-
-        $pengguna = auth()->user();
-
-        // Durasi 1 hari
-        $cookie = cookie(
-            'jwt_token',
-            $token,
-            60 * 24,   // menit
-            '/',
-            null,
-            false,
-            true
-        );
-
-        return response()->json([
-            'message' => 'Login berhasil',
-            'data' => [
-                'id' => $pengguna->id,
-                'nama_lengkap' => $pengguna->nama_lengkap,
-                'role' => $pengguna->role,
-            ]
-        ])->withCookie($cookie);
-    }
 
     // LOGOUT: hapus cookie
     public function logout()

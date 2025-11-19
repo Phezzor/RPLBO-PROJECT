@@ -42,6 +42,7 @@ Route::middleware(['jwt.cookie', 'jwt.auth'])->group(function () {
     Route::middleware('role:owner,admin')->group(function () {
         Route::post('/role', [PenggunaController::class, 'store']);
         Route::put('/role/{id}', [PenggunaController::class, 'update']);
+        Route::patch('/role/{id}/status', [PenggunaController::class, 'updateStatus']);
         Route::delete('/role/{id}', [PenggunaController::class, 'destroy']);
     });
 
@@ -53,6 +54,7 @@ Route::middleware(['jwt.cookie', 'jwt.auth'])->group(function () {
     Route::middleware('role:kepala_gudang')->group(function () {
         Route::post('/produk', [ProdukController::class, 'store']);
         Route::put('/produk/{id}', [ProdukController::class, 'update']);
+        Route::patch('/produk/{id}/status', [ProdukController::class, 'updateStatus']);
         Route::delete('/produk/{id}', [ProdukController::class, 'destroy']);
     });
 
