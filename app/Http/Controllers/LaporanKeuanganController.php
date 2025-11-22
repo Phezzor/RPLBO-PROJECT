@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Http\Controllers;
 
 use App\Models\LaporanKeuangan;
@@ -38,8 +39,7 @@ class LaporanKeuanganController extends Controller
             'periode_awal' => 'required|date',
             'periode_akhir' => 'required|date',
             'total_pendapatan' => 'required|integer',
-            'total_pengeluaran' => 'required|integer',
-            'dibuat_oleh' => 'required|string'
+            
         ]);
 
         $laporan = LaporanKeuangan::create([
@@ -47,7 +47,6 @@ class LaporanKeuanganController extends Controller
             'periode_awal' => $request->periode_awal,
             'periode_akhir' => $request->periode_akhir,
             'total_pendapatan' => $request->total_pendapatan,
-            'total_pengeluaran' => $request->total_pengeluaran,
             'dibuat_oleh' => $request->dibuat_oleh
         ]);
 
@@ -71,17 +70,14 @@ class LaporanKeuanganController extends Controller
             'periode_awal' => 'required|date',
             'periode_akhir' => 'required|date',
             'total_pendapatan' => 'required|integer',
-            'total_pengeluaran' => 'required|integer',
             'dibuat_oleh' => 'required|string'
         ]);
-
 
         $laporan->update([
             'cabang_id' => $request->cabang_id,
             'periode_awal' => $request->periode_awal,
             'periode_akhir' => $request->periode_akhir,
             'total_pendapatan' => $request->total_pendapatan,
-            'total_pengeluaran' => $request->total_pengeluaran,
             'dibuat_oleh' => $request->dibuat_oleh
         ]);
 
