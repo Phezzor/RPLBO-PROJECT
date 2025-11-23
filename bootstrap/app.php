@@ -15,16 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Alias middleware
         $middleware->alias([
-            'auth' => \App\Http\Middleware\Authenticate::class,
+            'auth' => \App\Http\Middleware\WebAuthMiddleware::class,
             'role' => \App\Http\Middleware\RoleMiddleware::class,
 
          // JWT
-            'jwt' => \App\Http\Middleware\JwtMiddleware::class, // middleware kamu sendiri
+            'jwt' => \App\Http\Middleware\JwtMiddleware::class,
             'jwt.refresh' => \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
             'jwt.cookie' => \App\Http\Middleware\JWTFromCookie::class,
             'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
-
-            
         ]);
 
         // WEB GROUP (NO SANCTUM)
